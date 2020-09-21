@@ -5,7 +5,7 @@ class Points():
 	def __init__(self, coordinates):
 		self.__curv = -1
 		self.__values = np.copy(coordinates) #a 2d array (dxN)
-		self.ref_vec = None #a column vector
+		self.__ref_vec = None #a column vector
 		if np.all(self.norm() < 1) == False:
 			raise Exception("Vectors should have norm 1")
 
@@ -22,14 +22,29 @@ class Points():
 		if self.__curv != -1:
 			raise Exception("Vectors already in euclidean space") 	
 	
-		self.ref_vec = np.copy(x)
+		self.__ref_vec = Points(x.get_values())
 		self.__curv = 0
 
-		lambda_x = 2/(1 - x.norm())
 		mob_sum = self.mobius_add(x)
 		mob_norm = np.linalg.norm(mob_sum, axis=1)
-		return mob_sum * ((1-x.norm()**2) * (np.arctanh(mob_norm) / mob_norm))[:, np.newaxis]
+		self.__values = mob_sum * ((1-x.norm()**2) * (np.arctanh(mob_norm) / mob_norm))[:, np.newaxis]
 	
+	def exp_map(self):
+	#query: not taking x as input, instead using the vec stored in private vars
+		if self.__curv != 0:
+			raise Exception("Vectors already in hyp space") 	
+	
+		#self.__ref_vec.log_map(self.__ref_vec)
+		x= self.__ref_vec
+#		print(np.tanh(self.norm()/(1-x.norm()**2)))
+#		print(self.__values/self.norm()[:, np.newaxis])
+#		print((self.__values/self.norm()[:, np.newaxis])*(np.tanh(self.norm()/(1-x.norm()**2)))[:, np.newaxis])
+		temp_arr = Points((self.__values/self.norm()[:, np.newaxis])*(np.tanh(self.norm()/(1-x.norm()**2)))[:, np.newaxis])
+		self.__values = temp_arr.mobius_add(x)	
+		
+		self.__ref__vec = None
+		self.__curv = 0
+
 	def get_values(self):
 		return np.copy(self.__values)
 
@@ -41,12 +56,20 @@ class Points():
 		scalar_prod = np.dot(x.get_values(), self.__values.transpose()).ravel()
 		norm_self = self.norm()
 		norm_x = x.norm()
+#		print(np.outer(1+2*scalar_prod+norm_self, x.get_values().ravel()) + (1 - norm_x**2)*self.__values)
+#		print((1 + 2*scalar_prod + norm_x**2 + norm_self**2).reshape(-1,1))
+#		ret =  (np.outer(1+2*scalar_prod+norm_self, x.get_values().ravel()) + (1 - norm_x**2)*self.__values) / ((1 + 2*scalar_prod + norm_x**2 + norm_self**2).reshape(-1,1))
+#		print(ret)
 		return (np.outer(1+2*scalar_prod+norm_self, x.get_values().ravel()) + (1 - norm_x**2)*self.__values) / ((1 + 2*scalar_prod + norm_x**2 + norm_self**2).reshape(-1,1))
-		
+		#query: <x,y> means scalar prod
+
 if __name__ == "__main__":
 	t1 = np.array([[-0.04, -0.03, -0.02],[-0.01,  0.00,  0.01],[ 0.02,  0.03,  0.04],[0.02, 0.04, 0.01]])
 	a = Points(t1)
 	t2 = np.array([[-0.04, -0.03, -0.02]])
 	b = Points(t2)
-	print(t1, t2)
+	print(t1)
 	a.log_map(b)
+	print(a.get_values())
+	a.exp_map()
+	print(a.get_values())
