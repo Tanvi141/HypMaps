@@ -21,19 +21,15 @@ class Points():
 		
 		if self.__curv != -1:
 			raise Exception("Vectors already in euclidean space") 	
+	
+		self.ref_vec = np.copy(x)
+		self.__curv = 0
 
 		lambda_x = 2/(1 - x.norm())
 		mob_sum = self.mobius_add(x)
 		mob_norm = np.linalg.norm(mob_sum, axis=1)
-		print(np.arctanh(mob_norm))
-		print((np.arctanh(mob_norm) / mob_norm))
-		print((1-x.norm()**2) * (np.arctanh(mob_norm) / mob_norm))
-		print(mob_sum)
-		print(((1-x.norm()**2) * (np.arctanh(mob_norm) / mob_norm))*mob_sum)
-		
-		self.ref_vec = np.copy(x)
-		self.__curv = 0
-
+		return mob_sum * ((1-x.norm()**2) * (np.arctanh(mob_norm) / mob_norm))[:, np.newaxis]
+	
 	def get_values(self):
 		return np.copy(self.__values)
 
@@ -45,7 +41,6 @@ class Points():
 		scalar_prod = np.dot(x.get_values(), self.__values.transpose()).ravel()
 		norm_self = self.norm()
 		norm_x = x.norm()
-
 		return (np.outer(1+2*scalar_prod+norm_self, x.get_values().ravel()) + (1 - norm_x**2)*self.__values) / ((1 + 2*scalar_prod + norm_x**2 + norm_self**2).reshape(-1,1))
 		
 if __name__ == "__main__":
@@ -53,4 +48,5 @@ if __name__ == "__main__":
 	a = Points(t1)
 	t2 = np.array([[-0.04, -0.03, -0.02]])
 	b = Points(t2)
+	print(t1, t2)
 	a.log_map(b)
