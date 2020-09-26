@@ -48,7 +48,7 @@ class Points():
 		self.__values = mob_sum * ((1-x.norm()**2) * (np.arctanh(mob_norm) / mob_norm))[:, np.newaxis]
 	
 	def exp_map(self):
-	#query: not taking x as input, instead using the vec stored in private vars
+	#take in x an input
 		if self.__curv != 0:
 			raise Exception("Vectors already in hyp space") 	
 	
@@ -61,25 +61,28 @@ class Points():
 		self.__values = temp_arr.mobius_add(x)	
 		
 		self.__ref__vec = None
-		self.__curv = 0
+		self.__curv = -1
 
 
 	def geodesic(self, x):
-		print(self.__values)
-		print(x.get_values())
+#print(self.__values)
+#		print(x.get_values())
 		if self.__curv == 0:
 			return np.linalg.norm(self.__values - x.get_values(), axis=1)
 		
 		elif self.__curv == -1:
-			print(np.linalg.norm(self.__values - x.get_values(), axis =1))
-			print((1-x.norm()**2)*(1-self.norm()**2))
-			print( np.arccosh( 1+2*(np.linalg.norm(self.__values - x.get_values(), axis =1)) / ((1-x.norm()**2)*(1-self.norm()**2))) )
+#			print(np.linalg.norm(self.__values - x.get_values(), axis =1))
+#			print((1-x.norm()**2)*(1-self.norm()**2))
+#			print( np.arccosh( 1+2*(np.linalg.norm(self.__values - x.get_values(), axis =1)) / ((1-x.norm()**2)*(1-self.norm()**2))) )
+			pass
+
 if __name__ == "__main__":
 	t1 = np.array([[-0.04, -0.03, -0.02],[-0.01,  0.00,  0.01],[ 0.02,  0.03,  0.04],[0.02, 0.04, 0.01]])
 	a = Points(t1)
 	t2 = np.array([[-0.04, -0.03, -0.02]])
 	b = Points(t2)
-	print(a.geodesic(b))
+	print(t1, t2)
+	#print(a.geodesic(b))
 	a.log_map(b)
 	print(a.get_values())
 	a.exp_map()
