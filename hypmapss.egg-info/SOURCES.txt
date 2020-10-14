@@ -1,9 +1,0 @@
-README.md
-setup.py
-hypmapss/__init__.py
-hypmapss/trans.py
-hypmapss.egg-info/PKG-INFO
-hypmapss.egg-info/SOURCES.txt
-hypmapss.egg-info/dependency_links.txt
-hypmapss.egg-info/requires.txt
-hypmapss.egg-info/top_level.txt

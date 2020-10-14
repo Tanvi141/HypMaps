@@ -1,6 +1,6 @@
 import numpy as np
 
-class Poincare():
+class Transform():
 	
 	def __init__(self, EPS):
 		self.EPS = EPS

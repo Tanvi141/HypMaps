@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="hypmapss", 
+    name="hypmaps", 
     version="0.0.1",
     author="Tanvi Karandikar",
     author_email="tanvi.karandikar141@gmail.com",
