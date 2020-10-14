@@ -1,6 +1,6 @@
 import numpy as np
 
-class Points():
+class Poincare():
 	
 	def __init__(self, EPS):
 		self.EPS = EPS
