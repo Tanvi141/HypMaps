@@ -35,8 +35,7 @@ class Points():
 		diff = self.mobius_add(-x, y) + self.EPS 
 		norm_diff = self.dot(diff, diff)
 		lam = self.lambda_x(x)
-		print( (( 2. / lam) * self.th_atanh(norm_diff) / norm_diff) , diff)
-		return (( 2. / lam) * self.th_atanh(norm_diff) / norm_diff) * diff
+		return (( 2. / lam) * self.th_atanh(norm_diff) / norm_diff)[:, np.newaxis] * diff
 	
 
 	def exp_map(self, x, v):
@@ -47,7 +46,7 @@ class Points():
 		
 		v = v + self.EPS
 		norm_v = self.dot(v, v)
-		second_term = (np.tanh(self.lambda_x(x) * norm_v / 2) / norm_v) * v
+		second_term = (np.tanh(self.lambda_x(x) * norm_v / 2) / norm_v) [:, np.newaxis] * v
 		return (self.mobius_add(x, second_term))
 
 
@@ -67,9 +66,9 @@ if __name__ == "__main__":
 	print("exp map", a.exp_map(x, log_x))
 	#print(geodesic())	
 	print("\n\non array")	
-	y2 = np.array([[0.02, 0.04, 0.01], [0.02, 0.04, 0.01]])
+	y2 = np.array([[-0.032, -0.04, 0.05], [0.02, 0.04, 0.01]])
 	#print("mob_add", a.mobius_add(y2, x))
 	log_x = a.log_map(x, y2)
 	print("log map", log_x)
-	#print("exp map", a.exp_map_try(x, log_x))
+	print("exp map", a.exp_map(x, log_x))
 	
