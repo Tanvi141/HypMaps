@@ -15,7 +15,13 @@ class Points():
 	
 	def dot(self, u, v):
 		return np.einsum("ij,ij->i", u, v) 
-
+	
+	def check_norm(self, u, v):
+		if np.argwhere(self.dot(u, u) >= 1):
+			raise Exception("Invalid input, norm should be < 1")
+		if np.argwhere( self.dot(v, v) >= 1):
+			raise Exception("Invalid input, norm should be < 1")
+	
 	def mobius_add(self, u, v):
 		v = v + self.EPS
 		dot_u_v = 2. * self.dot(u, v)
@@ -31,7 +37,8 @@ class Points():
 			raise Exception("Dimensions of inputs not matching: %d and %d"%(x.shape[1], self.__values.shape[1]))
 		if x.shape[0] != 1:
 			raise Exception("Input should be a single vector")
-		
+		self.check_norm(x, y)
+
 		diff = self.mobius_add(-x, y) + self.EPS 
 		norm_diff = self.dot(diff, diff)
 		lam = self.lambda_x(x)
@@ -51,6 +58,8 @@ class Points():
 
 
 	def geodesic(self, y, x):
+		self.check_norm(x, y)
+
 		norm_x_sq = self.dot(x, x)
 		norm_y_sq = self.dot(y, y)
 		print( 1+2*(self.dot(y - x, (y-x))) / ((1-norm_x_sq)*(1-norm_y_sq))) 
