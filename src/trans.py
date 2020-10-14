@@ -51,9 +51,10 @@ class Points():
 
 
 	def geodesic(self, y, x):
-		norm_x = np.dot(x, x)
-		norm_y = np.dot(y, y)
-		return np.arccosh( 1+2*(self.dot(y - x, (y-x))) / ((1-norm_x**2)*(1-norm_y**2))) 
+		norm_x_sq = self.dot(x, x)
+		norm_y_sq = self.dot(y, y)
+		print( 1+2*(self.dot(y - x, (y-x))) / ((1-norm_x_sq)*(1-norm_y_sq))) 
+		return np.arccosh( 1+2*(self.dot(y - x, (y-x))) / ((1-norm_x_sq)*(1-norm_y_sq))) 
 
 if __name__ == "__main__":
 	a = Points(0)
@@ -64,11 +65,14 @@ if __name__ == "__main__":
 	log_x = a.log_map(x, y)
 	print("log map", log_x)
 	print("exp map", a.exp_map(x, log_x))
-	#print(geodesic())	
 	print("\n\non array")	
 	y2 = np.array([[-0.032, -0.04, 0.05], [0.02, 0.04, 0.01]])
 	#print("mob_add", a.mobius_add(y2, x))
 	log_x = a.log_map(x, y2)
 	print("log map", log_x)
 	print("exp map", a.exp_map(x, log_x))
-	
+	x = np.array([[0.10757873243866733,0.6093478669582405]])
+	y = np.array([[0.46352923985723493,0.10584204760372007]])
+	print(a.geodesic(x, y), 1.6061649971520338)
+	y2 = np.array([[0.46352923985723493,0.10584204760372007], [0.29977866446656565,0.05307632917590743], [0.029805528569373907,0.6437093307617852]])
+	print(a.geodesic(x, y2), 1.444218397542425,0.2821437387738971)
