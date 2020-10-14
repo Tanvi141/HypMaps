@@ -22,8 +22,8 @@ class Points():
 		norm_u_sq = self.dot(u, u)
 		norm_v_sq = self.dot(v, v)
 		denominator = 1. + dot_u_v + norm_v_sq * norm_u_sq
-		return (1. + dot_u_v + norm_v_sq) / (denominator + self.EPS) * u + \
-         	     (1. - norm_u_sq) / (denominator + self.EPS) * v
+		return ((1. + dot_u_v + norm_v_sq) / (denominator + self.EPS))[:, np.newaxis] * u +  ((1. - norm_u_sq) / (denominator + self.EPS))[:, np.newaxis] * v
+		#return (1. + dot_u_v + norm_v_sq) / (denominator + self.EPS) * u +  (1. - norm_u_sq) / (denominator + self.EPS) * v
 	
 
 	def log_map(self, x, y):
@@ -33,8 +33,9 @@ class Points():
 			raise Exception("Input should be a single vector")
 		
 		diff = self.mobius_add(-x, y) + self.EPS 
-		norm_diff = self.dot(diff, diff.T)
+		norm_diff = self.dot(diff, diff)
 		lam = self.lambda_x(x)
+		print( (( 2. / lam) * self.th_atanh(norm_diff) / norm_diff) , diff)
 		return (( 2. / lam) * self.th_atanh(norm_diff) / norm_diff) * diff
 	
 
@@ -53,7 +54,7 @@ class Points():
 	def geodesic(self, y, x):
 		norm_x = np.dot(x, x)
 		norm_y = np.dot(y, y)
-		return np.arccosh( 1+2*(self.dot(y - x, (y-x).T)) / ((1-norm_x**2)*(1-norm_y**2))) 
+		return np.arccosh( 1+2*(self.dot(y - x, (y-x))) / ((1-norm_x**2)*(1-norm_y**2))) 
 
 if __name__ == "__main__":
 	a = Points(0)
