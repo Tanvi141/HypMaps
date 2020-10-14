@@ -4,7 +4,6 @@ class Transform():
 	
 	def __init__(self, EPS):
 		self.EPS = EPS
-		print(self.EPS)
 
 	def th_atanh(self, x):
 		#values = np.min(x, [1.0 - EPS])
@@ -29,7 +28,6 @@ class Transform():
 		norm_v_sq = self.dot(v, v)
 		denominator = 1. + dot_u_v + norm_v_sq * norm_u_sq
 		return ((1. + dot_u_v + norm_v_sq) / (denominator + self.EPS))[:, np.newaxis] * u +  ((1. - norm_u_sq) / (denominator + self.EPS))[:, np.newaxis] * v
-		#return (1. + dot_u_v + norm_v_sq) / (denominator + self.EPS) * u +  (1. - norm_u_sq) / (denominator + self.EPS) * v
 	
 
 	def log_map(self, x, y):
@@ -46,7 +44,7 @@ class Transform():
 	
 
 	def exp_map(self, x, v):
-		if x.shape[1] != y.shape[1]:
+		if x.shape[1] != v.shape[1]:
 			raise Exception("Dimensions of inputs not matching: %d and %d"%(x.shape[1], self.__values.shape[1]))
 		if x.shape[0] != 1:
 			raise Exception("Input should be a single vector")
@@ -62,5 +60,4 @@ class Transform():
 
 		norm_x_sq = self.dot(x, x)
 		norm_y_sq = self.dot(y, y)
-		print( 1+2*(self.dot(y - x, (y-x))) / ((1-norm_x_sq)*(1-norm_y_sq))) 
 		return np.arccosh( 1+2*(self.dot(y - x, (y-x))) / ((1-norm_x_sq)*(1-norm_y_sq))) 
